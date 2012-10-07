@@ -1,6 +1,6 @@
-package me.matej.Tanks;
+package me.matej.tanks;
 
-import me.matej.Tanks.gameStates.*;
+import me.matej.tanks.gameStates.*;
 
 /**
  *

@@ -1,4 +1,4 @@
-package me.matej.Tanks;
+package me.matej.tanks;
 
 import java.awt.Font;
 import org.lwjgl.LWJGLException;
@@ -17,6 +17,7 @@ import org.newdawn.slick.TrueTypeFont;
 final public class OpenGL {
 	private long lastFrame; // UNIX Time at last frame
 	private int fps; // Frames per Second
+	private int FPS;
 	private long lastFPS; // Last UNIX Time FPS was refreshed
 	private boolean vsync = true; // VSync enabled/disabled
 	private boolean fullscreen = false; // Fullscreen switch
@@ -27,7 +28,7 @@ final public class OpenGL {
 	
 	// Getters for encapsulation
 	public int getFps () {
-		return fps;
+		return FPS;
 	}
 	public boolean isVsync () {
 		return vsync;
@@ -190,6 +191,7 @@ final public class OpenGL {
 	// Calculates fps and updates the fps variable
 	public void updateFPS () {
 		if (getTime() - lastFPS > 1000) {
+			FPS = fps;
 			fps = 0;
 			lastFPS += 1000;
 		}

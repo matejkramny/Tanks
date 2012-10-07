@@ -1,12 +1,10 @@
-package me.matej.Tanks.gameStates;
+package me.matej.tanks.gameStates;
 
-import java.awt.Rectangle;
 import java.util.ArrayList;
-import me.matej.Tanks.Main;
-import me.matej.Tanks.Particles.CollisionSquare;
-import me.matej.Tanks.Particles.Object;
-import me.matej.Tanks.Particles.Tank;
-import me.matej.Tanks.Particles.Wall;
+import me.matej.tanks.Main;
+import me.matej.tanks.Particles.Object;
+import me.matej.tanks.Particles.Tank;
+import me.matej.tanks.Particles.Wall;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
@@ -16,21 +14,12 @@ import org.lwjgl.opengl.GL11;
  */
 public class Game extends GameStateClass {
 	public ArrayList<Object> objects;
-	public CollisionSquare[][] squares;
+	public boolean didCollide;
 	
 	public Game () {
 		DisplayMode dm = Main.getInstance().getOpenGL().getDisplayMode();
 		
 		objects = new ArrayList<Object>();
-		squares = new CollisionSquare[dm.getWidth()/20][dm.getHeight()/20];
-		
-		for (int x = 0; x < squares.length; x++) {
-			for (int y = 0; y < squares[x].length; y++) {
-				squares[x][y] = new CollisionSquare(x*20, y*20);
-				squares[x][y].red = (float)x / (float)squares.length;
-				squares[x][y].green = (float)y / (float)squares[x].length;
-			}
-		}
 		
 		// Walls
 		// we have 4 walls, surrounding the game area.
@@ -44,25 +33,23 @@ public class Game extends GameStateClass {
 	
 	@Override
 	public void draw () {
-		/*for (int x = 0; x < squares.length; x++) {
-			int rX = x * 20;
-			
-			for (int y = 0; y < squares[x].length; y++) {
-				squares[x][y].draw();
-			}
-		}*/
-		
 		Object[] os = objects.toArray(new Object[objects.size()]);
 		for (int i = 0; i < os.length; i++) {
 			GL11.glLoadIdentity();
 			os[i].draw();
-			
-			for (int ii = 0; ii < os.length; ii++) {
-				if (ii == i || i < 5) continue;
-				if (os[i].collidesWith(os[ii])) {
-					squares[10][10].draw();
-				}
-			}
+		}
+		
+		if (didCollide) {
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glLoadIdentity();
+			GL11.glColor3f(1, 0, 0);
+			GL11.glTranslatef(10f, 10f, 0);
+			GL11.glBegin(GL11.GL_QUADS);
+				GL11.glVertex2f(0, 0);
+				GL11.glVertex2f(50f, 0f);
+				GL11.glVertex2f(50f, 50f);
+				GL11.glVertex2f(0, 50f);
+			GL11.glEnd();
 		}
 	}
 	
@@ -70,11 +57,26 @@ public class Game extends GameStateClass {
 		return objects.toArray(new Object[objects.size()]);
 	}
 	
+	public void reset () {
+		while (objects.size() > 5) {
+			objects.remove(5);
+		}
+	}
+	
 	@Override
 	public void update (int delta) {
 		Object[] os = objects.toArray(new Object[objects.size()]);
 		for (int i = 0; i < os.length; i++) {
 			os[i].update(delta);
+		}
+		
+		didCollide = false;
+		for (int i = 0; i < os.length; i++) {
+			for (int ii = 0; ii < os.length; ii++) {
+				if (os[i] instanceof Wall || os[i] == os[ii]) continue;
+				
+				os[i].checkCollision(os[ii]);
+			}
 		}
 	}
 

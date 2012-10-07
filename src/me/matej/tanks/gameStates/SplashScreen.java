@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.matej.Tanks.gameStates;
+package me.matej.tanks.gameStates;
 
-import me.matej.Tanks.GameState;
-import me.matej.Tanks.Main;
+import me.matej.tanks.GameState;
+import me.matej.tanks.Main;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;

@@ -1,4 +1,4 @@
-package me.matej.Tanks.gameStates;
+package me.matej.tanks.gameStates;
 
 /**
  *

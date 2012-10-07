@@ -1,4 +1,4 @@
-package me.matej.Tanks;
+package me.matej.tanks;
 
 /**
  *
