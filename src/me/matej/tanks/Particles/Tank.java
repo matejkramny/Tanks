@@ -15,14 +15,12 @@ import org.newdawn.slick.TrueTypeFont;
  */
 public class Tank extends Object {
 	public Object gun; // Rotating independant of body
-	
 	private Object frontIdentifier; // Small different-colored square that marks the fron of the tank
-	
 	private float dx, dy; // Last directions.
-	
-	private volatile boolean statsVisible = false;
-	
-	private volatile short speedMultiplier = 1;
+	private Vector lastLoc;
+	private boolean statsVisible = false;
+	private short speedMultiplier = 1;
+	private double lastCollision;
 	
 	public Tank () {
 		this.init(50, 50, 50, 25, 1, 1, 1);
@@ -67,6 +65,11 @@ public class Tank extends Object {
 	@Override
 	public void update (int delta) {
 		boolean wantsToMove = false, moveForward = true;
+		boolean isMoving = false;
+		if (dx != 0f || dy != 0f) {
+			isMoving = true;
+		}
+		
 		// Repeated keys
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
 			wantsToMove = true; moveForward = false;
@@ -85,27 +88,19 @@ public class Tank extends Object {
 				rot = rot - 360f; // Prevent over rotating
 		}
 		
+		if (this.lastCollision < delta && this.lastCollision > 0) {
+			this.lastCollision -= delta;
+		} else if (this.lastCollision > delta) {
+			wantsToMove = false;
+			this.lastCollision = 0d;
+		}
+		
 		gun.update(delta);
 		
 		// Movement of the tank
 		double angle = this.rot;
 		while (angle > 90f)
 			angle -= 90f;
-		
-		if (dx != 0f) {
-			loc.x = loc.x + dx * delta;
-			dx *= 0.85f;
-			
-			if (dx < 0.02f && dx > -0.02f)
-				dx = 0f;
-		}
-		if (dy != 0f) {
-			loc.y = loc.y + dy * delta;
-			dy *= 0.85f;
-			
-			if (dy < 0.02f && dy > -0.02f)
-				dy = 0f;
-		}
 		
 		if (wantsToMove) {
 			double rotRadians = Math.toRadians(this.rot);
@@ -119,7 +114,31 @@ public class Tank extends Object {
 			
 			this.dx = (float)newDx;
 			this.dy = (float)newDy;
+			
+			loc.x += dx * delta;
+			loc.y += dy * delta;
+		} else {
+			double rotRadians = Math.toRadians(this.rot);
+			
+			if (dx != 0f) {
+				double newDx = Math.cos(rotRadians) * 0.05f;
+				loc.x += dx * delta;
+				dx *= 0.90f;
+			
+				if (dx < 0.02f && dx > -0.02f)
+					dx = 0f;
+			}
+			if (dy != 0f) {
+				double newDy = Math.sin(rotRadians) * 0.05f;
+				loc.y += dy * delta;
+				dy *= 0.90f;
+			
+				if (dy < 0.02f && dy > -0.02f)
+					dy = 0f;
+			}
 		}
+		
+		lastLoc = loc;
 		
 		setGunPos();
 		setFrontIdentifierPos();

@@ -46,9 +46,9 @@ public class Game extends GameStateClass {
 			GL11.glTranslatef(10f, 10f, 0);
 			GL11.glBegin(GL11.GL_QUADS);
 				GL11.glVertex2f(0, 0);
-				GL11.glVertex2f(50f, 0f);
-				GL11.glVertex2f(50f, 50f);
-				GL11.glVertex2f(0, 50f);
+				GL11.glVertex2f(10f, 0f);
+				GL11.glVertex2f(10f, 10f);
+				GL11.glVertex2f(0, 10f);
 			GL11.glEnd();
 		}
 	}
@@ -65,18 +65,21 @@ public class Game extends GameStateClass {
 	
 	@Override
 	public void update (int delta) {
-		Object[] os = objects.toArray(new Object[objects.size()]);
-		for (int i = 0; i < os.length; i++) {
-			os[i].update(delta);
-		}
-		
 		didCollide = false;
+		Object[] os = objects.toArray(new Object[objects.size()]);
+		
 		for (int i = 0; i < os.length; i++) {
 			for (int ii = 0; ii < os.length; ii++) {
-				if (os[i] instanceof Wall || os[i] == os[ii]) continue;
+				if (os[i] instanceof Wall || os[i] == os[ii]) continue; // allows only tank and other objects to be checked for collision, however doesn't prevent it. Tank can check for collision with a wall
 				
-				os[i].checkCollision(os[ii]);
+				if (os[i].checkCollision(os[ii])) {
+					
+				}
 			}
+		}
+		
+		for (int i = 0; i < os.length; i++) {
+			os[i].update(delta);
 		}
 	}
 
