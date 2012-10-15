@@ -41,8 +41,16 @@ public class Game extends GameStateClass {
 		
 		if (didCollide) {
 			GL11.glClearColor(1f, 0f, 0f, 1f);
-		} else {
-			GL11.glClearColor(1f, 1f, 1f, 1f);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glLoadIdentity();
+			GL11.glColor3f(1, 0, 0);
+			GL11.glTranslatef(10f, 10f, 0);
+			GL11.glBegin(GL11.GL_QUADS);
+				GL11.glVertex2f(0, 0);
+				GL11.glVertex2f(10f, 0f);
+				GL11.glVertex2f(10f, 10f);
+				GL11.glVertex2f(0, 10f);
+			GL11.glEnd();
 		}
 	}
 	
