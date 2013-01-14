@@ -19,7 +19,7 @@ import org.newdawn.slick.util.ResourceLoader;
  */
 public class SplashScreen extends GameStateClass {
 	
-	public static String splashPath = "me/matej/Tanks/resources/SplashScreen.png";
+	public static String splashPath = "me/matej/tanks/resources/SplashScreen.png";
 	public Texture splash;
 	public long splashTimeLeft;
 	
